@@ -8,10 +8,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
-public class DialogueActivity extends Activity {
+public class DialogueActivity extends Activity implements OnUtteranceCompletedListener {
 
     private TextToSpeech mTtobj;
 
@@ -33,15 +35,16 @@ public class DialogueActivity extends Activity {
                 }
             }
         });
+
     }
 
     @Override
-    public void onPause() {
+    public void onDestroy() {
         if (mTtobj != null) {
             mTtobj.stop();
             mTtobj.shutdown();
         }
-        super.onPause();
+        super.onDestroy();
     }
 
     private void bindViews() {
@@ -88,6 +91,13 @@ public class DialogueActivity extends Activity {
     private void openNextScreen() {
         Intent intent = new Intent(this, QuestionsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onUtteranceCompleted(String utteranceId) {
+        Toast.makeText(this, "Q!!!!", Toast.LENGTH_SHORT)
+             .show();
+
     }
 
 }
