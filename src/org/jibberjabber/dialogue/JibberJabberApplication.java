@@ -27,13 +27,13 @@ public class JibberJabberApplication extends Application {
         mScript.add(new ScriptLine("What do you think your best characteristic is?", true));
         mScript.add(new ScriptLine("My general awesomeness", false));
 
-        mScript.add(new ScriptLine("What adjective would you use to describe yourself?", true));
-        mScript.add(new ScriptLine("Crapulous", false));
+        mScript.add(new ScriptLine("Which words would you use to describe yourself?", true));
+        mScript.add(new ScriptLine("A sex machine", false));
 
         mQuestions = new DialogueQuestions();
 
         {
-            Question q = new Question("What is Jennifer's wildest fantasies?", "Dressing up as a hippo");
+            Question q = new Question("What is Jennifer's wildest fantasy?", "Dressing up as a hippo");
             mQuestions.add(q);
         }
         {
@@ -49,7 +49,7 @@ public class JibberJabberApplication extends Application {
             mQuestions.add(q);
         }
         {
-            Question q = new Question("What adjective does Jennifer use to describe her friend?", "She describes him as crapulous");
+            Question q = new Question("How does Jennifer describe her friend?", "as a sex machine");
             mQuestions.add(q);
         }
     }

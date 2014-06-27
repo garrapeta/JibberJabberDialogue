@@ -7,8 +7,10 @@ import java.util.Locale;
 import org.jibberjabber.dialogue.model.Question;
 
 import android.app.Activity;
-import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -16,6 +18,8 @@ import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,13 +35,20 @@ public class QuestionsActivity extends Activity {
     private View mViewRepeat;
     private View mViewNext;
 
+    private AudioManager mAudioManager;
+
     private HashMap<String, String> mParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_questions);
         bindViews();
+
+        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
 
         mParams = new HashMap<String, String>();
         mParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utterance_id");
@@ -96,19 +107,7 @@ public class QuestionsActivity extends Activity {
                 if (!textMatchList.isEmpty()) {
                     // If first Match contains the 'search' word
                     // Then start web search.
-                    if (textMatchList.get(0)
-                                     .contains("search")) {
-
-                        String searchQuery = textMatchList.get(0)
-                                                          .replace("search", " ");
-                        Intent search = new Intent(Intent.ACTION_WEB_SEARCH);
-                        search.putExtra(SearchManager.QUERY, searchQuery);
-                        startActivity(search);
-                    } else {
-                        // populate the Matches
-                        onRecognized(textMatchList);
-                    }
-
+                    onRecognized(textMatchList);
                 }
                 // Result code for various error.
             } else {
@@ -158,6 +157,8 @@ public class QuestionsActivity extends Activity {
     }
 
     public void promptAnswer() {
+        mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         // Specify the calling package to identify your application
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage()
@@ -165,6 +166,7 @@ public class QuestionsActivity extends Activity {
 
         // Display an hint to the user about what he should say.
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak your answer");
+        // intent.putExtra(RecognizerIntent.E, "Speak your answer");
 
         // Given an hint to the recognizer about what the user is going to say
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
@@ -193,18 +195,42 @@ public class QuestionsActivity extends Activity {
         mViewNext.setVisibility(View.GONE);
     }
 
-    private void onRecognized(ArrayList<String> textMatchList) {
-        String answer = JibberJabberApplication.mQuestions.getCurrent().mAnswer;
-        boolean success = isAnswerRight(textMatchList, answer);
-        if (success) {
-            mImageView.setImageResource(R.drawable.tick_green);
-        } else {
-            mImageView.setImageResource(R.drawable.cross_red);
-        }
+    private void onRecognized(final ArrayList<String> textMatchList) {
+        new Thread(new Runnable() {
 
-        mViewStart.setVisibility(View.GONE);
-        mViewRepeat.setVisibility(View.VISIBLE);
-        mViewNext.setVisibility(View.VISIBLE);
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+
+                        String answer = JibberJabberApplication.mQuestions.getCurrent().mAnswer;
+                        boolean success = isAnswerRight(textMatchList, answer);
+                        if (success) {
+                            MediaPlayer mediaPlayer = MediaPlayer.create(QuestionsActivity.this, R.raw.right);
+                            mediaPlayer.start();
+                            mImageView.setImageResource(R.drawable.tick_green);
+                        } else {
+                            mImageView.setImageResource(R.drawable.cross_red);
+                            MediaPlayer mediaPlayer = MediaPlayer.create(QuestionsActivity.this, R.raw.wrong2);
+                            mediaPlayer.start();
+                        }
+
+                        mViewStart.setVisibility(View.GONE);
+                        mViewRepeat.setVisibility(View.VISIBLE);
+                        mViewNext.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        }).start();
 
     }
 
