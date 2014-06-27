@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:background="#64D864"
-            android:text="START"
+            android:text="START DIALOGUE"
             android:textColor="#FFFFFF"
             android:textSize="30sp" />
 
