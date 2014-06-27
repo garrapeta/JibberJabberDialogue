@@ -110,17 +110,10 @@ public class QuestionsActivity extends Activity {
 
                 }
                 // Result code for various error.
-            } else if (resultCode == RecognizerIntent.RESULT_AUDIO_ERROR) {
-                showToastMessage("Audio Error");
-            } else if (resultCode == RecognizerIntent.RESULT_CLIENT_ERROR) {
-                showToastMessage("Client Error");
-            } else if (resultCode == RecognizerIntent.RESULT_NETWORK_ERROR) {
-                showToastMessage("Network Error");
-            } else if (resultCode == RecognizerIntent.RESULT_NO_MATCH) {
-                showToastMessage("No Match");
-            } else if (resultCode == RecognizerIntent.RESULT_SERVER_ERROR) {
-                showToastMessage("Server Error");
+            } else {
+                speakText(JibberJabberApplication.mQuestions.getCurrent());
             }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -235,6 +228,7 @@ public class QuestionsActivity extends Activity {
     }
 
     public void speakText(Question question) {
+        mImageView.setImageResource(R.drawable.question);
         speakText(question.mQuestion);
     }
 
