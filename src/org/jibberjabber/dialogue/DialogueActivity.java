@@ -8,16 +8,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-public class DialogueActivity extends Activity implements OnUtteranceCompletedListener {
+public class DialogueActivity extends Activity {
 
     private TextToSpeech mTtobj;
 
-    private View mViewPrev;
+    private ImageView mImageView;
+
+    private View mViewStart;
     private View mViewRepeat;
     private View mViewNext;
 
@@ -48,13 +49,14 @@ public class DialogueActivity extends Activity implements OnUtteranceCompletedLi
     }
 
     private void bindViews() {
-        mViewPrev = findViewById(R.id.btn_prev);
-        mViewPrev.setOnClickListener(new OnClickListener() {
+
+        mImageView = (ImageView) findViewById(R.id.image);
+
+        mViewStart = findViewById(R.id.btn_start);
+        mViewStart.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (JibberJabberApplication.mScript.prev()) {
-                    speakText(JibberJabberApplication.mScript.getCurrent());
-                }
+                speakText(JibberJabberApplication.mScript.getCurrent());
             }
         });
 
@@ -78,26 +80,33 @@ public class DialogueActivity extends Activity implements OnUtteranceCompletedLi
             }
 
         });
+
+        mViewStart.setVisibility(View.VISIBLE);
+        mViewRepeat.setVisibility(View.GONE);
+        mViewNext.setVisibility(View.GONE);
     }
 
     public void speakText(ScriptLine scriptLine) {
         speakText(scriptLine.mText);
+
+        if (scriptLine.mFirstCharacter) {
+            mImageView.setImageResource(R.drawable.first);
+        } else {
+            mImageView.setImageResource(R.drawable.second);
+        }
     }
 
     public void speakText(String toSpeak) {
         mTtobj.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+
+        mViewStart.setVisibility(View.GONE);
+        mViewRepeat.setVisibility(View.VISIBLE);
+        mViewNext.setVisibility(View.VISIBLE);
     }
 
     private void openNextScreen() {
         Intent intent = new Intent(this, QuestionsActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public void onUtteranceCompleted(String utteranceId) {
-        Toast.makeText(this, "Q!!!!", Toast.LENGTH_SHORT)
-             .show();
-
     }
 
 }

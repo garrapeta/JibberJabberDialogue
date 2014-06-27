@@ -33,23 +33,23 @@ public class JibberJabberApplication extends Application {
         mQuestions = new DialogueQuestions();
 
         {
-            Question q = new Question("What is Jennifer's wildest fantasies?", "Dressing up as a hippo.");
+            Question q = new Question("What is Jennifer's wildest fantasies?", "Dressing up as a hippo");
             mQuestions.add(q);
         }
         {
-            Question q = new Question("What did Jennifer recently experiment with?", "She experimented with drugs.");
+            Question q = new Question("What did Jennifer recently experiment with?", "with drugs");
             mQuestions.add(q);
         }
         {
-            Question q = new Question("Which fictional character would she like to be?", "She would like to be Buffy the Vampire Slayer.");
+            Question q = new Question("Which fictional character would she like to be?", "Buffy the Vampire Slayer");
             mQuestions.add(q);
         }
         {
-            Question q = new Question("What is Jennifer's best characteristic?", "Her best characteristic is her general awesomeness");
+            Question q = new Question("What is Jennifer's best characteristic?", "general awesomeness");
             mQuestions.add(q);
         }
         {
-            Question q = new Question("What adjective does Jennifer use to describe the alien being?", "She describes him as crapulous");
+            Question q = new Question("What adjective does Jennifer use to describe her friend?", "She describes him as crapulous");
             mQuestions.add(q);
         }
     }

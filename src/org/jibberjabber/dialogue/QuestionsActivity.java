@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -178,7 +179,7 @@ public class QuestionsActivity extends Activity {
         // return;
         // }
 
-        int noOfMatches = 4;
+        int noOfMatches = 7;
 
         // Specify how many results you want to receive. The results will be
         // sorted where the first result is the one with higher confidence.
@@ -208,6 +209,10 @@ public class QuestionsActivity extends Activity {
     }
 
     private boolean isAnswerRight(ArrayList<String> textMatchList, String answer) {
+        Log.i("stp", "===========");
+        Log.i("stp", ">>> " + answer.toLowerCase()
+                                    .trim());
+
         for (String recognized : textMatchList) {
             if (matches(answer, recognized)) {
                 return true;
@@ -217,12 +222,17 @@ public class QuestionsActivity extends Activity {
     }
 
     private boolean matches(String answer, String recognized) {
+
         if (answer == null) {
             return false;
         }
         if (recognized == null) {
             return false;
         }
+
+        Log.i("stp", "<<< " + recognized.toLowerCase()
+                                        .trim());
+
         return recognized.trim()
                          .equalsIgnoreCase(answer.trim());
     }
