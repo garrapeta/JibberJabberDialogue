@@ -15,6 +15,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class QuestionsActivity extends Activity {
@@ -23,6 +24,9 @@ public class QuestionsActivity extends Activity {
 
     private TextToSpeech mTtobj;
 
+    private ImageView mImageView;
+
+    private View mViewStart;
     private View mViewRepeat;
     private View mViewNext;
 
@@ -122,6 +126,16 @@ public class QuestionsActivity extends Activity {
 
     private void bindViews() {
 
+        mImageView = (ImageView) findViewById(R.id.image);
+
+        mViewStart = findViewById(R.id.btn_start);
+        mViewStart.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speakText(JibberJabberApplication.mQuestions.getCurrent());
+            }
+        });
+
         mViewRepeat = findViewById(R.id.btn_repeat);
         mViewRepeat.setOnClickListener(new OnClickListener() {
             @Override
@@ -142,6 +156,11 @@ public class QuestionsActivity extends Activity {
             }
 
         });
+
+        mViewStart.setVisibility(View.VISIBLE);
+        mViewRepeat.setVisibility(View.GONE);
+        mViewNext.setVisibility(View.GONE);
+
     }
 
     public void promptAnswer() {
@@ -174,16 +193,25 @@ public class QuestionsActivity extends Activity {
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, noOfMatches);
 
         startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+
+        mViewStart.setVisibility(View.GONE);
+        mViewRepeat.setVisibility(View.GONE);
+        mViewNext.setVisibility(View.GONE);
     }
 
     private void onRecognized(ArrayList<String> textMatchList) {
         String answer = JibberJabberApplication.mQuestions.getCurrent().mAnswer;
         boolean success = isAnswerRight(textMatchList, answer);
         if (success) {
-            showToastMessage("WELL DONE!!!");
+            mImageView.setImageResource(R.drawable.tick_green);
         } else {
-            showToastMessage("BAD!!!");
+            mImageView.setImageResource(R.drawable.cross_red);
         }
+
+        mViewStart.setVisibility(View.GONE);
+        mViewRepeat.setVisibility(View.VISIBLE);
+        mViewNext.setVisibility(View.VISIBLE);
+
     }
 
     private boolean isAnswerRight(ArrayList<String> textMatchList, String answer) {
