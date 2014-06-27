@@ -15,19 +15,41 @@ public class JibberJabberApplication extends Application {
     static {
         mScript = new DialogueScript();
 
-        mScript.add(new ScriptLine("How old are you?", true));
-        mScript.add(new ScriptLine("I am 69 years old", false));
-        mScript.add(new ScriptLine("Where are you from?", true));
-        mScript.add(new ScriptLine("I am from the Moon", false));
+        mScript.add(new ScriptLine("Do you have any wild fantasies?", true));
+        mScript.add(new ScriptLine("I have many, but my favourite is dressing up as a hippo", false));
+
+        mScript.add(new ScriptLine("Do you like experimenting with new things in life?", true));
+        mScript.add(new ScriptLine("Yes I have recently experimented with drugs", false));
+
+        mScript.add(new ScriptLine("If you could be any fictional character who would you be?", true));
+        mScript.add(new ScriptLine("Buffy the Vampire Slayer", false));
+
+        mScript.add(new ScriptLine("What do you think your best characteristic is?", true));
+        mScript.add(new ScriptLine("My general awesomeness", false));
+
+        mScript.add(new ScriptLine("What adjective would you use to describe yourself?", true));
+        mScript.add(new ScriptLine("Crapulous", false));
 
         mQuestions = new DialogueQuestions();
 
         {
-            Question q = new Question("How old is she?", "She is 69 years old");
+            Question q = new Question("What is Jennifer's wildest fantasies?", "Dressing up as a hippo.");
             mQuestions.add(q);
         }
         {
-            Question q = new Question("Where is she from?", "She is from the moon");
+            Question q = new Question("What did Jennifer recently experiment with?", "She experimented with drugs.");
+            mQuestions.add(q);
+        }
+        {
+            Question q = new Question("Which fictional character would she like to be?", "She would like to be Buffy the Vampire Slayer.");
+            mQuestions.add(q);
+        }
+        {
+            Question q = new Question("What is Jennifer's best characteristic?", "Her best characteristic is her general awesomeness");
+            mQuestions.add(q);
+        }
+        {
+            Question q = new Question("What adjective does Jennifer use to describe the alien being?", "She describes him as crapulous");
             mQuestions.add(q);
         }
     }
